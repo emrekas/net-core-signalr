@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +19,10 @@ namespace NetCoreSignalRAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Cors hatasi yememek icin Cors middlewareni da ekliyorum.
+            services.AddCors();
             services.AddControllers();
+            //SignalR middlewareni ekliyoruz.
             services.AddSignalR();
         }
 
@@ -30,6 +33,13 @@ namespace NetCoreSignalRAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+            //Cors ayarlarını yapıyorum. Header, method, imza farketmeksizin gel bro dedim.
+            app.UseCors(c =>
+            {
+                c.AllowAnyHeader();
+                c.AllowAnyMethod();
+                c.AllowCredentials();
+            });
 
             app.UseHttpsRedirection();
 
@@ -37,6 +47,7 @@ namespace NetCoreSignalRAPI
 
             app.UseAuthorization();
 
+            //PositionHub'a /positionHub endpointini oluşturduğum sınıfla eşleştiriyorum.
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

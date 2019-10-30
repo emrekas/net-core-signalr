@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace NetCoreSignalRAPI.Hubs
 {
-    //Bu sınıfı olarak kullanacağımızı belirtiyoruz.
+    //Bu sınıfı Hub olarak kullanacağımızı belirtiyoruz.
     public class PositionHub : Hub
     {
         public static HashSet<string> ActiveUsers = new HashSet<string>();
@@ -22,13 +22,7 @@ namespace NetCoreSignalRAPI.Hubs
             //Bu kısımda veri kontrolü, değişimi veya kaydı yapabiliriz.
 
             //Ben sadece gelen değerlerin bütün kullanıcılara iletilmesini istedim.
-            return Clients.All.SendAsync("NewPosition", user, mouseX, mouseY);
-        }
-
-        //Aktif olan kullanıcıların sayısını döner
-        public Task GetActiveUsersCount()
-        {
-            return Clients.All.SendAsync("ActiveUsersCount", ActiveUsers.Count);
+            return Clients.All.SendAsync("NewPosition", user, mouseX, mouseY, ActiveUsers.Count);
         }
     }
 }

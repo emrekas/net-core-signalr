@@ -42,9 +42,7 @@ namespace NetCoreSignalRAPI
             });
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             //PositionHub'a /positionHub endpointini oluşturduğum sınıfla eşleştiriyorum.

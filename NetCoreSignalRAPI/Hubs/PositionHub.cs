@@ -17,12 +17,12 @@ namespace NetCoreSignalRAPI.Hubs
         }
 
         //İstemci tarafından çağıracağımız ChangePosition isminde bir metot oluşturuyoruz.
-        public Task ChangePosition(string user, string mouseX, string mouseY)
+        public Task ChangePosition(string user, string currentX, string currentY)
         {
             //Bu kısımda veri kontrolü, değişimi veya kaydı yapabiliriz.
 
             //Ben sadece gelen değerlerin bütün kullanıcılara iletilmesini istedim.
-            return Clients.All.SendAsync("NewPosition", user, mouseX, mouseY, ActiveUsers.Count);
+            return Clients.All.SendAsync("NewPosition", user, currentX, currentY, ActiveUsers.Count);
         }
     }
 }

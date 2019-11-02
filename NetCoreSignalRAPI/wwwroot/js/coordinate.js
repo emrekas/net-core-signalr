@@ -1,40 +1,52 @@
 ﻿'use strict';
 
+//Şimdilik CORS hatası yememek için şimdilik burayı böyle bırakacağım React ile yazarken farklı olacak
 let connection = new signalR.HubConnectionBuilder()
-    .withUrl('https://localhost:44362/positionHub', {
+    .withUrl('http://localhost:4000/positionHub', {
         skipNegotiation: true,
         transport: signalR.HttpTransportType.WebSockets
     })
     .build();
-var users = [];
-//Disable send button until connection is established
 
+var users = [];
+
+//İstek sayısını saydırmak için sayaç oluşturdum.
 var counter = 1;
+
+//Giriş yapan kullanıcılara random isim verdim.
 var user = Math.random().toString(36).substring(7);
-connection.on('NewPosition', function (user, mouseX, mouseY,activeUsersCount) {
+
+//Yapılan değişiklikleri dinlemeye başladım.
+connection.on('NewPosition', function (user, currentX, currentY, activeUsersCount) {
+
     document.getElementById('requestCount').innerHTML = "Request Counter: " + counter++;
-    document.getElementById('onlineUsers').innerHTML = "Online Users: " + activeUsersCount;   
+    document.getElementById('onlineUsers').innerHTML = "Online Users: " + activeUsersCount;
+
     if (!users.includes(user)) {
+
         var newUserDiv = document.createElement('div');
         newUserDiv.innerHTML = user;
         newUserDiv.style.position = 'absolute';
         newUserDiv.id = user;
         document.getElementsByTagName('body')[0].appendChild(newUserDiv);
-        newUserDiv.style.left = mouseX;
-        newUserDiv.style.top = mouseY;
+        newUserDiv.style.left = currentX;
+        newUserDiv.style.top = currentY;
         users.push(user);
+
     }else{
         var existUser = document.getElementById(user);
-        existUser.style.left = mouseX;
-        existUser.style.top = mouseY;
+        existUser.style.left = currentX;
+        existUser.style.top = currentY;
     }
 });
 
+//Bağlantıyı oluşturuyorum.
 connection.start().then(function () {
 }).catch(function (err) {
     return console.error(err.toString());
 });
 
+//Tuşa her basıldığında kullanıcının o andaki konumunu alıp diğer kullanıcılara iletiyorum.
 window.addEventListener('keydown', function (event) {
     document.getElementById("anyKey").style.display = "none";
     var div = document.getElementById(user);
@@ -63,8 +75,3 @@ window.addEventListener('keydown', function (event) {
         return console.error(err.toString());
     });
 });
-
-
-
-
-    // event.preventDefault();
